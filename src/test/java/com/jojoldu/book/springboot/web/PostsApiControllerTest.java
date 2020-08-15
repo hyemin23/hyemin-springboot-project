@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +53,7 @@ public class PostsApiControllerTest {
                 .build();
         String url = "http://localhost:" + port + "/api/v1/posts";
         //when
+
             ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,requestDto,Long.class);
 
         //then
@@ -89,6 +91,7 @@ public class PostsApiControllerTest {
             HttpEntity<PostsUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
             //when
+            //exchange메서드는 haeder를 수정한다. 결과값으로 responseEntity를 받아온다.
             ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT,requestDtoHttpEntity,Long.class);
 
             //then
@@ -104,6 +107,34 @@ public class PostsApiControllerTest {
 
 
         }
+
+        @Test
+        public void BaseTimeEntity_등록() throws Exception{
+            //given
+            LocalDateTime now = LocalDateTime.of(2019,6,4,0,0,0);
+            postsRepository.save(Posts.builder()
+                    .content("test baseTime")
+                    .title("test baseTime")
+                    .author("test author")
+                    .build());
+
+            //when
+            List<Posts> postsList = postsRepository.findAll();
+
+            //then
+            Posts posts = postsList.get(0);
+
+            System.out.println(">>>>> createDate : " + posts.getCreateDate());
+            System.out.println(">>>>> modifiedDate : " + posts.getModifiedDate());
+
+
+            //검증  대상의 시간이 인자로 전달된 시간 이우힝닞를 검즈앟는 메서드
+            //즉, 2019 6월 4일 이후인지 검증해주는 메서드 API이다 .
+            assertThat(posts.getCreateDate()).isAfter(now);
+            assertThat(posts.getModifiedDate()).isAfter(now);
+
+    }
+
 
 }
 
