@@ -2,12 +2,16 @@ package com.jojoldu.book.springboot.service.posts;
 
 import com.jojoldu.book.springboot.domain.posts.Posts;
 import com.jojoldu.book.springboot.domain.posts.PostsRepository;
+import com.jojoldu.book.springboot.web.dto.PostsListResponseDto;
 import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
 import com.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
 import com.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +39,16 @@ public class PostsService {
         Posts posts = postsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
         return new PostsResponseDto(posts);
+    }
+
+    //목록 가져오기
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc(){
+        //posts 타입으로 들어오는것을 생성자로 post를 넣어줘서 PostsListResponseDto 타입으로 변환
+        //즉, Posts의 Stream을 map을 통하여 PostListResponseDto로 변환 -> List로 변환하는 메소드 입니다.
+        return postsRepository.findAllDesc().stream().map(PostsListResponseDto::new)
+                                .collect(Collectors.toList());
+
     }
 
 }
