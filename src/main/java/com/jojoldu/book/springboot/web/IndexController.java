@@ -2,16 +2,22 @@ package com.jojoldu.book.springboot.web;
 
 import com.jojoldu.book.springboot.service.posts.PostsService;
 import com.jojoldu.book.springboot.web.dto.PostsListResponseDto;
+import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 public class IndexController {
+    private final Logger log = LoggerFactory.getLogger(IndexController.class);
+
 
     private final PostsService postsService;
 
@@ -30,4 +36,13 @@ public class IndexController {
         return "posts-save";
     }
 
+    @GetMapping("/posts/update/{id}")
+   public String postsUpdate(@PathVariable Long id, Model model){
+
+        log.info("get 들어옴 ");
+        PostsResponseDto byId = postsService.findById(id);
+
+        model.addAttribute("post",byId);
+        return "posts-update";
+    }
 }

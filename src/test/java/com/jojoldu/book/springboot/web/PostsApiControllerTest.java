@@ -128,7 +128,7 @@ public class PostsApiControllerTest {
             System.out.println(">>>>> modifiedDate : " + posts.getModifiedDate());
 
 
-            //검증  대상의 시간이 인자로 전달된 시간 이우힝닞를 검즈앟는 메서드
+            //검증  대상의 시간이 인자로 전달된 시간 이후인지를 검즈앟는 메서드
             //즉, 2019 6월 4일 이후인지 검증해주는 메서드 API이다 .
             assertThat(posts.getCreateDate()).isAfter(now);
             assertThat(posts.getModifiedDate()).isAfter(now);
